@@ -1,0 +1,61 @@
+# Performance Comparison: Quick-Find vs Weighted Quick-Union
+Name: Muhammad Omar Khan
+Erp: 31599  
+Assignment: #1 - Percolation  
+
+:Introduction
+For this assignment, I implemented and compared two different Union-Find algorithms for the percolation problem: Quick-Find and Weighted Quick-Union. The goal was to see how algorithm choice affects performance in a real scientific application. 
+
+: My Implementation Approach
+I implemented both algorithms with the same interface but different internal structures.
+Both implementations use virtual top and bottom sites, which was a clever optimization suggested in the assignment. Instead of checking every bottom row site to see if it's full, I just check if the virtual top and virtual bottom are connected.
+
+:: Testing Methodology
+I ran performance tests on my laptop with the following setup:
+- 100 trials for each grid size to get reliable averages
+- Time limit of 60 seconds per test (anything longer is impractical)
+- Measured actual wall-clock time using the provided Stopwatch class
+- Tested grid sizes from n=10 up to the maximum each algorithm could handle
+
+: Results
+### Performance Comparison Table
+| Grid Size (n) | Quick-Find Time | Weighted QU Time | Speedup |
+|---------------|-----------------|------------------|---------|
+| n = 10        | 0.009s          | 0.003s           | 2.8x    |
+| n = 20        | 0.074s          | 0.010s           | 7.5x    |
+| n = 50        | 2.079s          | 0.060s           | 34.8x   |
+| n = 100       | 32.541s         | 0.256s           | 127x    |
+| n = 200       | timeout (>60s)  | 1.050s           | 57x+    |
+
+:: Maximum Problem Sizes
+- **Quick-Find:** Could only handle up to n=100 (took 32.5 seconds)
+- **Weighted Quick-Union:** Handled up to n=1200 (took 56.5 seconds)  
+- **Improvement:** 12x larger problems are now solvable!
+
+:: What I Learned
+- The Performance Gap Gets Worse Fast
+The difference between the algorithms isn't constant - it gets exponentially worse as the grid size increases. At n=10, Weighted Quick-Union was only 2.8x faster, which isn't that impressive. But by n=100, it was 127x faster.  
+
+:: Real-World Impact
+The assignment asked us to estimate the percolation threshold. My results were:
+- n=200: mean ≈ 0.591-0.593 (very close to theoretical value)
+- n=2: mean ≈ 0.667 (higher due to finite-size effects)
+
+- Comparison with Assignment Examples
+The assignment showed example outputs like:
+
+> PercolationStats 200 100
+mean() = 0.592993
+elapsed time = 0.373
+ 
+ 
+My Weighted Quick-Union implementation got very similar results:
+mean() = 0.591457
+elapsed time = 1.232382  
+My times are a bit slower (probably due to different hardware), but the statistical results match perfectly, which gives me confidence my implementation is correct.
+
+- Conclusion:
+- Algorithm choice can make the difference between a 30-second computation and a 30-minute one
+- For scientific computing, this often determines what research is even possible
+- The "constant factors" we sometimes ignore in Big O analysis actually matter a lot in practice
+- Weighted Quick-Union with path compression is a really elegant solution that shows how clever data structure design pays off
